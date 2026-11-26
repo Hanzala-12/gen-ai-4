@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Four generative models, one app</title>
+<style>
+@page { size: 2400px 1600px; margin: 0 }
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { width: 2400px; height: 1600px; background: #f4f1ea; color: #1d1d1b;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact }
+.poster { width: 2400px; height: 1600px; padding: 44px 72px 36px; display: flex; flex-direction: column }
+header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 6px solid #1d1d1b; padding-bottom: 22px }
+h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: 78px; line-height: 1.05; letter-spacing: -1px }
+h1 span { color: #b5481f }
+.sub { font-size: 28px; margin-top: 10px; color: #4a4a45 }
+.authors { text-align: right; font-size: 34px; line-height: 1.5 }
+.authors b { font-weight: 600 }
+.authors small { display: block; font-size: 26px; color: #4a4a45; margin-top: 6px }
+main { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 22px; min-height: 0 }
+.col { padding: 0 34px; border-left: 2px solid #c9c3b4; display: flex; flex-direction: column; min-height: 0 }
+.col:first-child { border-left: 0; padding-left: 0 }
+.col:last-child { padding-right: 0 }
+.tag { font-size: 24px; letter-spacing: 3px; text-transform: uppercase; color: #b5481f; font-weight: 600 }
+h2 { font-family: Georgia, serif; font-size: 44px; line-height: 1.1; margin: 6px 0 10px }
+p { font-size: 24px; line-height: 1.38; margin-bottom: 10px }
+.fig { margin: 8px 0 6px; background: #fff; border: 1px solid #c9c3b4; padding: 8px }
+.fig img { display: block; width: 100%; height: auto }
+.fig.crop img { height: 360px; object-fit: cover; object-position: top }
+.cap { font-size: 19px; color: #55554f; margin-bottom: 12px; line-height: 1.3 }
+.big { display: flex; align-items: baseline; gap: 14px; margin: 6px 0 10px; border-top: 2px solid #1d1d1b; padding-top: 10px }
+.big b { font-family: Georgia, serif; font-size: 66px; line-height: 1; color: #b5481f }
+.big span { font-size: 22px; line-height: 1.25 }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+footer { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 56px; border-top: 6px solid #1d1d1b; margin-top: 18px; padding-top: 16px; height: 255px }
+footer h3 { font-family: Georgia, serif; font-size: 32px; margin-bottom: 8px }
+table { border-collapse: collapse; width: 100%; font-size: 22px }
+th, td { text-align: left; padding: 5px 10px 5px 0; border-bottom: 1px solid #c9c3b4 }
+th { font-weight: 600; color: #4a4a45 }
+td.n { font-variant-numeric: tabular-nums; font-weight: 600 }
+ul { list-style: none }
+li { font-size: 22px; line-height: 1.3; padding-left: 22px; position: relative; margin-bottom: 5px }
+li::before { content: ""; position: absolute; left: 0; top: 15px; width: 10px; height: 3px; background: #b5481f }
+.links { font-size: 22px; line-height: 1.45 }
+.links code { font-family: Consolas, monospace; font-size: 20px; background: #e8e3d6; padding: 1px 6px }
+.note { font-size: 21px; color: #55554f; margin-top: 8px }
+</style></head><body><div class="poster">
+<header>
+  <div>
+    <h1>Four generative models, <span>one app</span></h1>
+    <div class="sub">Masked autoencoder, VAE, diffusion and retrieval-augmented generation, trained from scratch in PyTorch</div>
+  </div>
+  <div class="authors"><b>Muhammad Hanzala</b><br><b>Qasim Zubair</b>
+    <small>Generative AI, Fall 2026</small></div>
+</header>
+
+<main>
+  <section class="col">
+    <div class="tag">Part A &middot; EuroSAT</div>
+    <h2>Masked autoencoder</h2>
+    <p>Hide 75% of a satellite tile (48 of 64 patches) and train a small transformer to paint them back, with no labels. Loss is counted on the hidden patches only.</p>
+    <div class="fig"><img src="../results/mae_reconstructions.png"></div>
+    <div class="cap">Masked input, reconstruction and original. Blurry, but fields, roads and water keep their layout.</div>
+    <div class="big"><b>46.6%</b><span>test accuracy from only 160 labelled images (chance is 10%)</span></div>
+    <div class="fig"><img src="../results/mae_confusion_matrix.png" style="height:250px;object-fit:contain"></div>
+    <div class="cap">Most confusion: annual vs permanent crops, and pasture vs river.</div>
+  </section>
+
+  <section class="col">
+    <div class="tag">Part B &middot; UHaT Urdu</div>
+    <h2>Variational autoencoder</h2>
+    <p>Each handwritten character is squeezed into 16 numbers. Training balances reconstruction against a KL term that keeps the code space usable for sampling.</p>
+    <div class="fig"><img src="../results/vae_samples.png" style="height:290px;object-fit:contain"></div>
+    <div class="cap">64 new characters decoded from random codes.</div>
+    <div class="big"><b>130.05</b><span>test negative ELBO in nats: 104.77 reconstruction + 25.28 KL</span></div>
+    <div class="fig"><img src="../results/vae_interpolation.png"></div>
+    <div class="cap">Ten steps between two different characters.</div>
+  </section>
+
+  <section class="col">
+    <div class="tag">Part C &middot; UHaT Urdu</div>
+    <h2>Diffusion model</h2>
+    <p>A U-Net learns to remove noise over 1,000 steps. Given a character name it turns pure noise into new handwriting. Sharper than the VAE, but 1,000 network calls per sample.</p>
+    <div class="fig"><img src="../results/ddpm_denoising.png"></div>
+    <div class="cap">One sample denoised from t = 999 to t = 0.</div>
+    <div class="fig crop"><img src="../results/ddpm_samples_40x8.png"></div>
+    <div class="cap">Eight samples per character, first rows of the 40 x 8 grid.</div>
+    <div class="big"><b>0.0227</b><span>final training loss (L<sub>simple</sub>), 21.5 minutes on a Tesla T4</span></div>
+  </section>
+
+  <section class="col">
+    <div class="tag">Part D &middot; BioASQ</div>
+    <h2>RAG with sources</h2>
+    <p>40,181 PubMed abstracts become 79,332 chunks. MiniLM finds the five best chunks for a question and Qwen2.5-1.5B answers from them, citing passage numbers.</p>
+    <div class="fig"><img src="../results/rag_recall_at_k.png"></div>
+    <div class="cap">Hit@k and Recall@k for k = 1 to 20 on 707 test questions.</div>
+    <div class="big"><b>86%</b><span>of questions have a relevant abstract in the top 10 (Hit@10 = 0.861)</span></div>
+    <p style="font-size:22px">Retrieval failed on 14% of questions, mostly rare drug and protein names. Every answer carries: <i>For educational use only. Not medical advice.</i></p>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <h3>Results</h3>
+    <table>
+      <tr><th>Model</th><th>Parameters</th><th>Training</th><th>Result</th></tr>
+      <tr><td>MAE</td><td class="n">3.17 M</td><td class="n">3.7 min</td><td class="n">46.6% accuracy</td></tr>
+      <tr><td>VAE</td><td class="n">0.22 M</td><td class="n">0.4 min</td><td class="n">130.05 nats</td></tr>
+      <tr><td>DDPM U-Net</td><td class="n">4.03 M</td><td class="n">21.5 min</td><td class="n">loss 0.0227</td></tr>
+      <tr><td>RAG, 100 questions</td><td class="n">&ndash;</td><td class="n">&ndash;</td><td class="n">ROUGE-L 0.259</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3>What we learned</h3>
+    <ul>
+      <li>Hiding 75% of an image forces global understanding; 15% would let the model just smooth gaps.</li>
+      <li>The KL term is what makes random sampling from the VAE work.</li>
+      <li>Diffusion is sharper than the VAE and much slower.</li>
+      <li>RAG is only as good as its retriever.</li>
+    </ul>
+  </div>
+  <div class="links">
+    <h3>Try it</h3>
+    One web app, four tabs: pick a tile, morph characters, write a character, ask a question.<br>
+    Code: <code>github.com/Hanzala-12/gen-ai-4</code><br>
+    Blog: <code>medium.com/@yaqoobhanzala</code>
+    <div class="note">Trained on a free Kaggle Tesla T4; the full notebook runs in about 36 minutes.</div>
+  </div>
+</footer>
+</div></body></html>
