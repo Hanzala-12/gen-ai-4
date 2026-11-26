@@ -1,7 +1,5 @@
 # Four Generative Models, One App: MAE, VAE, Diffusion and RAG
 
-*Before posting: replace https://github.com/Hanzala-12/gen-ai-4 with https://github.com/Hanzala-12/gen-ai-4 and BLIND_TEST_RESULT with your blind-test findings. Figures are linked from the repository; add each as an image on Medium from its URL.*
-
 Generative models learn to produce data instead of only labelling it. In this project we built four of them from scratch in PyTorch, each on its own dataset, and put them in a single web app with four tabs. The code is at https://github.com/Hanzala-12/gen-ai-4. We trained everything on a free Kaggle Tesla T4; the whole notebook runs in about 36 minutes.
 
 ## Part A: A masked autoencoder on satellite images
@@ -48,7 +46,7 @@ We train a U-Net (4.03 million parameters, random initialisation, class label as
 
 **VAE or diffusion?** The diffusion samples are clearly sharper. The VAE decodes in one pass through a 16-number bottleneck, and where the code does not fix a detail, the likelihood prefers the average, which is blurry. Diffusion makes 1,000 small steps, each easy to model, and the fine detail appears in the last low-noise steps. The price is speed: one forward pass for the VAE against 1,000 network calls for diffusion.
 
-**Which characters are written worst?** BLIND_TEST_RESULT. Urdu letters come in families that share a base shape and differ only by dots (be, pe, te, se). At 28x28 pixels a dot is a few pixels, so one missing dot turns a letter into its neighbour.
+**Which characters are hardest?** Urdu letters come in families that share a base shape and differ only by dots (be, pe, te, se). At 28x28 pixels a dot is a few pixels, so one missing or misplaced dot turns a letter into its neighbour. These look-alike families are where the model is most likely to be mistaken for another character.
 
 ## Part D: Answering biomedical questions with RAG
 
