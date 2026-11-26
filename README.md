@@ -50,7 +50,7 @@ The app uses a GPU when one is available. On a CPU the diffusion tab takes aroun
 (1000 denoising steps) and the first RAG question loads about 3 GB of models.
 
 Screenshots of the four tabs are in `results/app_*.jpg`: `app_mae.jpg`, `app_vae_samples.jpg`,
-`app_vae_interpolation.jpg` and `app_diffusion.jpg`. The RAG tab screenshot is still to be added (it needs a GPU to answer in reasonable time).
+`app_vae_interpolation.jpg`, `app_diffusion.jpg` and `app_rag.png` (the RAG tab, captured on a Kaggle GPU).
 
 ## Results
 
